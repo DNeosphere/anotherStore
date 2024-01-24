@@ -18,7 +18,7 @@ public class ProductDTO {
     private Integer price;
     @Min(value = 1, message = "El stock no puede ser menor o igual a 0")
     private Integer stock;
-    @NotNull(message = "El campo 'activo' no puede ser nulo")
+    @NotNull(message = "El campo 'activo' no puede ser null")
     @AssertTrue(message = "El campo 'disponible' debe ser true o false")
     private boolean disponible;
 }
