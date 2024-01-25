@@ -60,8 +60,10 @@ public class ProductService {
 
 
     //Eliminar un producto
-    public void deleteProduct(Long id) {
-        this.productRepository.deleteById(id);
+    public Product deleteProduct(Long id) {
+        Product product = this.getProductById(id);
+        this.productRepository.delete(product);
+        return product;
     }
 
 
