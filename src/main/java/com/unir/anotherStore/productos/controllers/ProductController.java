@@ -3,6 +3,7 @@ package com.unir.anotherStore.productos.controllers;
 
 import com.unir.anotherStore.productos.advice.ProductResponse;
 import com.unir.anotherStore.productos.controllers.DTO.ProductDTO;
+import com.unir.anotherStore.productos.controllers.DTO.ProductsResponseDTO;
 import com.unir.anotherStore.productos.entities.Product;
 import com.unir.anotherStore.productos.services.ProductService;
 import jakarta.validation.Valid;
@@ -23,8 +24,13 @@ public class ProductController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Product>> getAllProducts() {
-        return ResponseEntity.ok(this.productService.getAllProducts());
+    public ResponseEntity<ProductsResponseDTO> getAllProducts() {
+        List<Product> products = this.productService.getAllProducts();
+        int productCount = products.size();
+
+        ProductsResponseDTO responseDTO = new ProductsResponseDTO(productCount, products);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
 
