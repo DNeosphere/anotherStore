@@ -12,8 +12,8 @@
 # Para crear  y actualizar un producto se debe enviar un json con los siguientes campos:
 # Enviar los siquientes campos:
 # {
-    "name":"Arroz Roa",
-    "description":"Suave y Blanco",
+    "name":"Iphone 15",
+    "description":"Lo ultimo en guaracha!!",
     "price": 10,
     "stock": 10,
     "disponible": true
