@@ -8,16 +8,16 @@ import com.unir.anotherStore.products.model.request.CreateBookRequest;
 
 public interface BooksService {
 	
-	List<Book> getBooks(String name, String country, String description, Boolean visible);
+	List<Book> getBooks(String name, String author, String description, Long isbn, String genre, String language, String image, Boolean visible);
 
-	Book getBook(String productId);
+	Book getBook(String bookId);
 	
-	Boolean removeProduct(String productId);
+	Boolean removeBook(String bookId);
 
-	Book createProduct(CreateBookRequest request);
+	Book createBook(CreateBookRequest request);
 
-	Book updateProduct(String productId, String updateRequest);
+	Book updateBook(String bookId, String updateRequest);
 
-	Book updateProduct(String productId, BookDto updateRequest);
+	Book updateBook(String bookId, BookDto updateRequest);
 
 }

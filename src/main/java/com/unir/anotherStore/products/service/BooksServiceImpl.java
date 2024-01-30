@@ -28,11 +28,17 @@ public class BooksServiceImpl implements BooksService {
 	private ObjectMapper objectMapper;
 
 	@Override
-	public List<Book> getBooks(String name, String author, String description, Boolean visible) {
+	public List<Book> getBooks(String name, String author, String description, Long isbn, String genre, String language, String image, Boolean visible) {
 
-		if (StringUtils.hasLength(name) || StringUtils.hasLength(author) || StringUtils.hasLength(description)
+		if (StringUtils.hasLength(name)
+				|| StringUtils.hasLength(author)
+				|| StringUtils.hasLength(description)
+				|| isbn != null
+				|| StringUtils.hasLength(genre)
+				|| StringUtils.hasLength(language)
+				|| StringUtils.hasLength(image)
 				|| visible != null) {
-			return repository.search(name, author, description, visible);
+			return repository.search(name, author, description, isbn, genre, language, image, visible);
 		}
 
 		List<Book> books = repository.getBooks();
@@ -45,7 +51,7 @@ public class BooksServiceImpl implements BooksService {
 	}
 
 	@Override
-	public Boolean removeProduct(String productId) {
+	public Boolean removeBook(String productId) {
 
 		Book product = repository.getById(Long.valueOf(productId));
 
@@ -58,36 +64,50 @@ public class BooksServiceImpl implements BooksService {
 	}
 
 	@Override
-	public Book createProduct(CreateBookRequest request) {
+	public Book createBook(CreateBookRequest request) {
 
-		//Otra opcion: Jakarta Validation: https://www.baeldung.com/java-validation
-		if (request != null && StringUtils.hasLength(request.getName().trim())
+
+		if (request != null && StringUtils.hasLength(
+				request.getName().trim())
 				&& StringUtils.hasLength(request.getDescription().trim())
-				&& StringUtils.hasLength(request.getAuthor().trim()) && request.getVisible() != null) {
+				&& StringUtils.hasLength(request.getGenre().trim())
+				&& request.getIsbn() != null
+				&& StringUtils.hasLength(request.getLanguage().trim())
+				&& StringUtils.hasLength(request.getImage().trim())
+				&& StringUtils.hasLength(request.getAuthor().trim())
+				&& request.getVisible() != null) {
 
-			Book product = Book.builder().name(request.getName()).description(request.getDescription())
-					.author(request.getAuthor()).visible(request.getVisible()).build();
+			Book book = Book.builder()
+					.name(request.getName())
+					.description(request.getDescription())
+					.author(request.getAuthor())
+					.isbn(request.getIsbn())
+					.genre(request.getGenre())
+					.language(request.getLanguage())
+					.image(request.getImage())
+					.visible(request.getVisible())
+					.build();
 
-			return repository.save(product);
+			return repository.save(book);
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public Book updateProduct(String productId, String request) {
+	public Book updateBook(String bookId, String request) {
 
 		//PATCH se implementa en este caso mediante Merge Patch: https://datatracker.ietf.org/doc/html/rfc7386
-		Book product = repository.getById(Long.valueOf(productId));
-		if (product != null) {
+		Book book = repository.getById(Long.valueOf(bookId));
+		if (book != null) {
 			try {
 				JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
-				JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(product)));
+				JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(book)));
 				Book patched = objectMapper.treeToValue(target, Book.class);
 				repository.save(patched);
 				return patched;
 			} catch (JsonProcessingException | JsonPatchException e) {
-				log.error("Error updating product {}", productId, e);
+				log.error("Error updating book {}", bookId, e);
                 return null;
             }
         } else {
@@ -96,7 +116,7 @@ public class BooksServiceImpl implements BooksService {
 	}
 
 	@Override
-	public Book updateProduct(String productId, BookDto updateRequest) {
+	public Book updateBook(String productId, BookDto updateRequest) {
 		Book product = repository.getById(Long.valueOf(productId));
 		if (product != null) {
 			product.update(updateRequest);
