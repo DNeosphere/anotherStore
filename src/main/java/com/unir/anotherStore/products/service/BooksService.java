@@ -6,11 +6,11 @@ import com.unir.anotherStore.products.model.pojo.Book;
 import com.unir.anotherStore.products.model.pojo.BookDto;
 import com.unir.anotherStore.products.model.request.CreateBookRequest;
 
-public interface ProductsService {
+public interface BooksService {
 	
-	List<Book> getProducts(String name, String country, String description, Boolean visible);
+	List<Book> getBooks(String name, String country, String description, Boolean visible);
 
-	Book getProduct(String productId);
+	Book getBook(String productId);
 	
 	Boolean removeProduct(String productId);
 

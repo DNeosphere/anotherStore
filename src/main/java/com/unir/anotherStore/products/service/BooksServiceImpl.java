@@ -19,7 +19,7 @@ import com.unir.anotherStore.products.model.request.CreateBookRequest;
 
 @Service
 @Slf4j
-public class ProductsServiceImpl implements ProductsService {
+public class BooksServiceImpl implements BooksService {
 
 	@Autowired
 	private BookRepository repository;
@@ -28,19 +28,19 @@ public class ProductsServiceImpl implements ProductsService {
 	private ObjectMapper objectMapper;
 
 	@Override
-	public List<Book> getProducts(String name, String author, String description, Boolean visible) {
+	public List<Book> getBooks(String name, String author, String description, Boolean visible) {
 
 		if (StringUtils.hasLength(name) || StringUtils.hasLength(author) || StringUtils.hasLength(description)
 				|| visible != null) {
 			return repository.search(name, author, description, visible);
 		}
 
-		List<Book> products = repository.getProducts();
-		return products.isEmpty() ? null : products;
+		List<Book> books = repository.getBooks();
+		return books.isEmpty() ? null : books;
 	}
 
 	@Override
-	public Book getProduct(String productId) {
+	public Book getBook(String productId) {
 		return repository.getById(Long.valueOf(productId));
 	}
 

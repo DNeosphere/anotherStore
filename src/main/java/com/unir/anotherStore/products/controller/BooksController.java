@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.unir.anotherStore.products.model.pojo.Book;
 import com.unir.anotherStore.products.model.request.CreateBookRequest;
-import com.unir.anotherStore.products.service.ProductsService;
+import com.unir.anotherStore.products.service.BooksService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Products Controller", description = "Microservicio encargado de exponer operaciones CRUD sobre productos alojados en una base de datos en memoria.")
-public class ProductsController {
+@Tag(name = "Books Controller", description = "Microservicio encargado de exponer operaciones CRUD sobre libros alojados en una base de datos en memoria.")
+public class BooksController {
 
-    private final ProductsService service;
+    private final BooksService service;
 
-    @GetMapping("/products")
+    @GetMapping("/books")
     @Operation(
             operationId = "Obtener productos",
             description = "Operacion de lectura",
@@ -50,31 +50,31 @@ public class ProductsController {
             @RequestParam(required = false) Boolean visible) {
 
         log.info("headers: {}", headers);
-        List<Book> products = service.getProducts(name, author, description, visible);
+        List<Book> books = service.getBooks(name, author, description, visible);
 
-        if (products != null) {
-            return ResponseEntity.ok(products);
+        if (books != null) {
+            return ResponseEntity.ok(books);
         } else {
             return ResponseEntity.ok(Collections.emptyList());
         }
     }
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/books/{bookId}")
     @Operation(
-            operationId = "Obtener un producto",
+            operationId = "Obtener un libro",
             description = "Operacion de lectura",
-            summary = "Se devuelve un producto a partir de su identificador.")
+            summary = "Se devuelve un libro a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
-            description = "No se ha encontrado el producto con el identificador indicado.")
-    public ResponseEntity<Book> getProduct(@PathVariable String productId) {
+            description = "No se ha encontrado el libro con el identificador indicado.")
+    public ResponseEntity<Book> getBook(@PathVariable String bookId) {
 
-        log.info("Request received for product {}", productId);
-        Book product = service.getProduct(productId);
+        log.info("Request received for product {}", bookId);
+        Book product = service.getBook(bookId);
 
         if (product != null) {
             return ResponseEntity.ok(product);
@@ -86,16 +86,16 @@ public class ProductsController {
 
     @DeleteMapping("/products/{productId}")
     @Operation(
-            operationId = "Eliminar un producto",
+            operationId = "Eliminar un libro",
             description = "Operacion de escritura",
-            summary = "Se elimina un producto a partir de su identificador.")
+            summary = "Se elimina un libro a partir de su identificador.")
     @ApiResponse(
             responseCode = "200",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)))
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
-            description = "No se ha encontrado el producto con el identificador indicado.")
+            description = "No se ha encontrado el libro con el identificador indicado.")
     public ResponseEntity<Void> deleteProduct(@PathVariable String productId) {
 
         Boolean removed = service.removeProduct(productId);

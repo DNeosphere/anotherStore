@@ -16,7 +16,7 @@ public class BookRepository {
 
     private final BookJpaRepository repository;
 
-    public List<Book> getProducts() {
+    public List<Book> getBooks() {
         return repository.findAll();
     }
 
