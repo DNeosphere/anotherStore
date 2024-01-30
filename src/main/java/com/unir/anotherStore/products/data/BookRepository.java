@@ -24,26 +24,44 @@ public class BookRepository {
         return repository.findById(id).orElse(null);
     }
 
-    public Book save(Book product) {
-        return repository.save(product);
+    public Book save(Book book) {
+        return repository.save(book);
     }
 
-    public void delete(Book product) {
-        repository.delete(product);
+    public void delete(Book book) {
+        repository.delete(book);
     }
 
-    public List<Book> search(String name, String country, String description, Boolean visible) {
+    public List<Book> search(String name, String author, String description, Long isbn, String genre, String language,
+                             String image, Boolean visible) {
+
         SearchCriteria<Book> spec = new SearchCriteria<>();
         if (StringUtils.isNotBlank(name)) {
             spec.add(new SearchStatement("name", name, SearchOperation.MATCH));
         }
 
-        if (StringUtils.isNotBlank(country)) {
-            spec.add(new SearchStatement("country", country, SearchOperation.EQUAL));
+        if (StringUtils.isNotBlank(author)) {
+            spec.add(new SearchStatement("author", author, SearchOperation.MATCH));
+        }
+
+        if (isbn != null) {
+            spec.add(new SearchStatement("isbn", isbn, SearchOperation.EQUAL));
+        }
+
+        if (StringUtils.isNotBlank(genre)) {
+            spec.add(new SearchStatement("genre", genre, SearchOperation.MATCH));
+        }
+
+        if (StringUtils.isNotBlank(language)) {
+            spec.add(new SearchStatement("language", language, SearchOperation.EQUAL));
         }
 
         if (StringUtils.isNotBlank(description)) {
             spec.add(new SearchStatement("description", description, SearchOperation.MATCH));
+        }
+
+        if (StringUtils.isNotBlank(image)) {
+            spec.add(new SearchStatement("image", image, SearchOperation.EQUAL));
         }
 
         if (visible != null) {

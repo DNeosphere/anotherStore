@@ -40,17 +40,25 @@ public class BooksController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
     public ResponseEntity<List<Book>> getProducts(
             @RequestHeader Map<String, String> headers,
-            @Parameter(name = "name", description = "Nombre del producto. No tiene por que ser exacto", example = "iPhone", required = false)
+            @Parameter(name = "name", description = "Nombre del libro. No tiene por que ser exacto", example = "iPhone", required = false)
             @RequestParam(required = false) String name,
-            @Parameter(name = "author", description = "País del producto. Debe ser exacto", example = "ES", required = false)
+            @Parameter(name = "author", description = "Author del libro", example = "Pepito Perez", required = false)
             @RequestParam(required = false) String author,
-            @Parameter(name = "description", description = "Descripcion del producto. No tiene por que ser exacta", example = "Estupendo", required = false)
+            @Parameter(name = "description", description = "Descripcion del libro. No tiene por que ser exacta", example = "Historia sobre la vida de un perrito", required = false)
             @RequestParam(required = false) String description,
-            @Parameter(name = "visible", description = "Estado del producto. true o false", example = "true", required = false)
+            @Parameter(name = "isbn", description = "Código identificador comercial de libros", example = "Estupendo", required = false)
+            @RequestParam(required = false) Long isbn,
+            @Parameter(name = "genre", description = "Género del libro", example = "Literatura", required = false)
+            @RequestParam(required = false) String genre,
+            @Parameter(name = "language", description = "Idioma en el que está escrito el libro", example = "ES", required = false)
+            @RequestParam(required = false) String language,
+            @Parameter(name = "image", description = "Link a imagen del libro", example = "https://superlibros.com/elmejorcover.png", required = false)
+            @RequestParam(required = false) String image,
+            @Parameter(name = "visible", description = "Estado del libro. true o false", example = "true", required = false)
             @RequestParam(required = false) Boolean visible) {
 
         log.info("headers: {}", headers);
-        List<Book> books = service.getBooks(name, author, description, visible);
+        List<Book> books = service.getBooks(name, author, description, isbn, genre, language, image, visible);
 
         if (books != null) {
             return ResponseEntity.ok(books);
@@ -73,18 +81,18 @@ public class BooksController {
             description = "No se ha encontrado el libro con el identificador indicado.")
     public ResponseEntity<Book> getBook(@PathVariable String bookId) {
 
-        log.info("Request received for product {}", bookId);
-        Book product = service.getBook(bookId);
+        log.info("Request received for book {}", bookId);
+        Book book = service.getBook(bookId);
 
-        if (product != null) {
-            return ResponseEntity.ok(product);
+        if (book != null) {
+            return ResponseEntity.ok(book);
         } else {
             return ResponseEntity.notFound().build();
         }
 
     }
 
-    @DeleteMapping("/products/{productId}")
+    @DeleteMapping("/books/{bookId}")
     @Operation(
             operationId = "Eliminar un libro",
             description = "Operacion de escritura",
@@ -96,9 +104,9 @@ public class BooksController {
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "No se ha encontrado el libro con el identificador indicado.")
-    public ResponseEntity<Void> deleteProduct(@PathVariable String productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable String bookId) {
 
-        Boolean removed = service.removeProduct(productId);
+        Boolean removed = service.removeBook(bookId);
 
         if (Boolean.TRUE.equals(removed)) {
             return ResponseEntity.ok().build();
@@ -108,13 +116,13 @@ public class BooksController {
 
     }
 
-    @PostMapping("/products")
+    @PostMapping("/books")
     @Operation(
-            operationId = "Insertar un producto",
+            operationId = "Insertar un libro",
             description = "Operacion de escritura",
-            summary = "Se crea un producto a partir de sus datos.",
+            summary = "Se crea un libro a partir de sus datos.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Datos del producto a crear.",
+                    description = "Datos del libro a crear.",
                     required = true,
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = CreateBookRequest.class))))
     @ApiResponse(
@@ -127,10 +135,10 @@ public class BooksController {
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
-            description = "No se ha encontrado el producto con el identificador indicado.")
-    public ResponseEntity<Book> addProduct(@RequestBody CreateBookRequest request) {
+            description = "No se ha encontrado el libro con el identificador indicado.")
+    public ResponseEntity<Book> addBook(@RequestBody CreateBookRequest request) {
 
-        Book createdProduct = service.createProduct(request);
+        Book createdProduct = service.createBook(request);
 
         if (createdProduct != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -140,13 +148,13 @@ public class BooksController {
     }
 
 
-    @PatchMapping("/products/{productId}")
+    @PatchMapping("/books/{bookId}")
     @Operation(
-            operationId = "Modificar parcialmente un producto",
+            operationId = "Modificar parcialmente un libro",
             description = "RFC 7386. Operacion de escritura",
             summary = "RFC 7386. Se modifica parcialmente un producto.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Datos del producto a crear.",
+                    description = "Datos del libro a crear.",
                     required = true,
                     content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = String.class))))
     @ApiResponse(
@@ -155,10 +163,10 @@ public class BooksController {
     @ApiResponse(
             responseCode = "400",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
-            description = "Producto inválido o datos incorrectos introducidos.")
-    public ResponseEntity<Book> patchProduct(@PathVariable String productId, @RequestBody String patchBody) {
+            description = "Libro inválido o datos incorrectos introducidos.")
+    public ResponseEntity<Book> patchProduct(@PathVariable String bookId, @RequestBody String patchBody) {
 
-        Book patched = service.updateProduct(productId, patchBody);
+        Book patched = service.updateBook(bookId, patchBody);
         if (patched != null) {
             return ResponseEntity.ok(patched);
         } else {
@@ -167,13 +175,13 @@ public class BooksController {
     }
 
 
-    @PutMapping("/products/{productId}")
+    @PutMapping("/books/{bookId}")
     @Operation(
-            operationId = "Modificar totalmente un producto",
+            operationId = "Modificar totalmente un libro",
             description = "Operacion de escritura",
-            summary = "Se modifica totalmente un producto.",
+            summary = "Se modifica totalmente un libro.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Datos del producto a actualizar.",
+                    description = "Datos del libro a actualizar.",
                     required = true,
                     content = @Content(mediaType = "application/merge-patch+json", schema = @Schema(implementation = BookDto.class))))
     @ApiResponse(
@@ -183,9 +191,9 @@ public class BooksController {
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
             description = "Producto no encontrado.")
-    public ResponseEntity<Book> updateProduct(@PathVariable String productId, @RequestBody BookDto body) {
+    public ResponseEntity<Book> updateBook(@PathVariable String bookId, @RequestBody BookDto body) {
 
-        Book updated = service.updateProduct(productId, body);
+        Book updated = service.updateBook(bookId, body);
         if (updated != null) {
             return ResponseEntity.ok(updated);
         } else {
