@@ -32,9 +32,9 @@ public class BooksController {
 
     @GetMapping("/books")
     @Operation(
-            operationId = "Obtener productos",
+            operationId = "Obtener libros",
             description = "Operacion de lectura",
-            summary = "Se devuelve una lista de todos los productos almacenados en la base de datos.")
+            summary = "Se devuelve una lista de todos los libros almacenados en la base de datos.")
     @ApiResponse(
             responseCode = "200",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Book.class)))
@@ -152,7 +152,7 @@ public class BooksController {
     @Operation(
             operationId = "Modificar parcialmente un libro",
             description = "RFC 7386. Operacion de escritura",
-            summary = "RFC 7386. Se modifica parcialmente un producto.",
+            summary = "RFC 7386. Se modifica parcialmente un libro.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del libro a crear.",
                     required = true,
@@ -190,7 +190,7 @@ public class BooksController {
     @ApiResponse(
             responseCode = "404",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class)),
-            description = "Producto no encontrado.")
+            description = "Libro no encontrado.")
     public ResponseEntity<Book> updateBook(@PathVariable String bookId, @RequestBody BookDto body) {
 
         Book updated = service.updateBook(bookId, body);
