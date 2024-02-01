@@ -1,15 +1,16 @@
-package org.spring.shop.msvc.eureka;
+package com.unir.eureka.unireureka;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
-@EnableEurekaServer
 @SpringBootApplication
-public class EurekaServiceApplication {
+@EnableEurekaServer
 
-    public static void main(String[] args) {
-        SpringApplication.run(EurekaServiceApplication.class, args);
-    }
+public class UnirEurekaApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(UnirEurekaApplication.class, args);
+	}
 
 }
