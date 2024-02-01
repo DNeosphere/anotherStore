@@ -1,4 +1,4 @@
-package com.unir.eureka.unireureka;
+package com.serviceeureka.serviceEureka;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,11 +6,10 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 @SpringBootApplication
 @EnableEurekaServer
-
-public class UnirEurekaApplication {
+public class ServiceEurekaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UnirEurekaApplication.class, args);
+		SpringApplication.run(ServiceEurekaApplication.class, args);
 	}
 
 }
