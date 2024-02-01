@@ -1,15 +1,13 @@
 package com.unir.operator.data;
 
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.unir.operator.data.utils.SearchCriteria;
 import com.unir.operator.data.utils.SearchOperation;
 import com.unir.operator.data.utils.SearchStatement;
 import com.unir.operator.model.pojo.Borrow;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor

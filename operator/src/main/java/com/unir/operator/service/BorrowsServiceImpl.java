@@ -1,17 +1,14 @@
 package com.unir.operator.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.unir.operator.data.BorrowRepository;
 import com.unir.operator.model.pojo.Borrow;
 import com.unir.operator.model.pojo.BorrowDto;
 import com.unir.operator.model.request.CreateBorrowRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BorrowsServiceImpl implements BorrowsService {

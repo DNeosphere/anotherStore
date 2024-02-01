@@ -1,13 +1,13 @@
-package com.unir.eureka.unireureka;
+package org.spring.shop.msvc.eureka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UnirEurekaApplicationTests {
+class EurekaServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
